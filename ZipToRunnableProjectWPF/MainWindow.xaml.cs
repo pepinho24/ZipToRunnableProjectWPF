@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ZipToRunnableProjectWPF.Common;
 using Path = System.IO.Path;
 
 namespace ZipToRunnableProjectWPF
@@ -25,7 +26,7 @@ namespace ZipToRunnableProjectWPF
     {
         public string DestinationFolder = @"D:\Ticket archives\2019.08.27\ProgressAreaCustomProgress\Test";
 
-        public string TemplateProjectLocation = @"D:\SampleProjects\TemplateProject\EmptyProject";
+        public string TemplateProjectLocation = UniversalFilePathResolver.ResolvePath(@"~\OriginalTemplate");
 
         public string DefaultSourcePath = @"D:\Ticket archives\2019.08.27\ProgressAreaCustomProgress\ProgressAreaCustomProgress";
 
