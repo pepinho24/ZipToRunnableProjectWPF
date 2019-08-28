@@ -1,0 +1,47 @@
+﻿<Window x:Class="ZipToRunnableProjectWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ZipToRunnableProjectWPF"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Choose a Scenario to paste" SizeToContent="Height"  Width="850">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" MaxHeight="900px" />
+            <RowDefinition Height="40px" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="New project name:" Name="BaseLabel"  />
+                <TextBox Name="NewProjectNameTextBox" Text="TelerikWebSiteProject1" Width="400" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Project Destination Path" Width="150px"  />
+                <TextBox Name="DestinationPathTextBox" IsEnabled="False" Width="625" />
+                <Button Name="ChoosePath"  Height="40" Width="60"
+           Content="Browse" Click="ChoosePath_Click">
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="3">
+            <Button Name="Export"  Height="40"
+           Content="Export to archive" Click="Export_Click">
+            </Button>
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+            <ListBox Name="ListBoxTest"  SelectionMode="Multiple" >
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Height" Value="40" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Window>
