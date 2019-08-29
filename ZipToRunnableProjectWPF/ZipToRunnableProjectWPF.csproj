@@ -70,6 +70,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Common\StaticVariables.cs" />
     <Compile Include="Common\UniversalFilePathResolver.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -104,6 +105,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DestinationFolder\" />
     <Folder Include="OriginalTemplate\EmptyProject\App_Code\" />
     <Folder Include="OriginalTemplate\EmptyProject\App_Data\" />
     <Folder Include="OriginalTemplate\EmptyProject\Bin\" />

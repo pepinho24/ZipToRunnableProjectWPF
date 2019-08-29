@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,21 +26,26 @@ namespace ZipToRunnableProjectWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string DestinationFolder = @"D:\Ticket archives\2019.08.27\ProgressAreaCustomProgress\Test";
 
-        public string TemplateProjectLocation = UniversalFilePathResolver.ResolvePath(@"~\OriginalTemplate");
+        public string DestinationFolderPath = UniversalFilePathResolver.ResolvePath(ConfigurationManager.AppSettings["DestinationFolderPath"].ToString());//@"D:\Ticket archives\2019.08.27\ProgressAreaCustomProgress\Test";
+
+        public string TemplateProjectLocation = UniversalFilePathResolver.ResolvePath(ConfigurationManager.AppSettings["TemplateProjectLocation"].ToString());
 
         public string DefaultSourcePath = @"D:\Ticket archives\2019.08.27\ProgressAreaCustomProgress\ProgressAreaCustomProgress";
 
-        public string OriginalTemplateProjectName = "EmptyProject";
+        public string OriginalTemplateProjectName = ConfigurationManager.AppSettings["OriginalTemplateProjectName"].ToString();
 
-        public string OriginalTemplateProjectPort = "46461";
+        public string OriginalTemplateProjectPort = ConfigurationManager.AppSettings["OriginalTemplateProjectPort"].ToString();
 
         public MainWindow()
         {
             InitializeComponent();
+            DestinationPathTextBox.Text = DestinationFolderPath;
 
-            DestinationPathTextBox.Text = DestinationFolder;
+            if (StaticVariables.SelectedFiles.Length > 0)
+            {
+                DefaultSourcePath = Path.GetDirectoryName(StaticVariables.SelectedFiles[0]);
+            }
 
             var projects = new List<TemplateProject>();
             //var sourcePath = Environment.GetCommandLineArgs()[1];
@@ -46,22 +53,40 @@ namespace ZipToRunnableProjectWPF
             var folders = Directory.GetDirectories(sourcePath);
             var files = Directory.GetFiles(sourcePath);
 
+            var selectedfiles = new List<TemplateProject>();
+            var selectedfolders = new List<TemplateProject>();
             foreach (var relativepathtempl in folders)
             {
-                projects.Add(new TemplateProject(
+                var proj = new TemplateProject(
                     Path.GetFileName(relativepathtempl),
                     Path.GetFullPath(relativepathtempl),
-                    FileOrFolder.Folder));
+                    FileOrFolder.Folder);
+                projects.Add(proj);
+                if (StaticVariables.SelectedFiles.Contains(relativepathtempl))
+                {
+                    selectedfolders.Add(proj);
+                }
             }
             foreach (var relativepathtempl in files)
             {
-                projects.Add(new TemplateProject(
+                var proj = new TemplateProject(
                     Path.GetFileName(relativepathtempl),
                     Path.GetFullPath(relativepathtempl),
-                    FileOrFolder.File));
+                    FileOrFolder.File);
+                projects.Add(proj);
+                if (StaticVariables.SelectedFiles.Contains(relativepathtempl))
+                {
+                    selectedfiles.Add(proj);
+                }
             }
 
             ListBoxTest.ItemsSource = projects;
+            foreach (var selecteditem in selectedfiles.Concat(selectedfolders))
+            {
+                ListBoxTest.SelectedItems.Add(selecteditem);
+            }
+            ListBoxTest.Focus();
+
         }
 
         private void Export_Click(object sender, RoutedEventArgs e)
@@ -74,7 +99,7 @@ namespace ZipToRunnableProjectWPF
             }
 
             var filesToExport = ListBoxTest.SelectedItems;
-            var newTarget = PasteTemplate(newProjectName, new DirectoryInfo(DestinationFolder));
+            var newTarget = PasteTemplate(newProjectName, new DirectoryInfo(DestinationFolderPath));
 
             foreach (TemplateProject file in filesToExport)
             {
@@ -85,6 +110,8 @@ namespace ZipToRunnableProjectWPF
             }
 
             MessageBox.Show("Runnable project created successfully");
+            // open destination folder 
+            Process.Start(DestinationFolderPath);
         }
 
         private bool IsProjectNameValid(string newProjectName)
@@ -208,15 +235,15 @@ namespace ZipToRunnableProjectWPF
                 // Set the help text description for the FolderBrowserDialog.
                 dialog.Description =
                     "Select the directory that you want to use as the default.";
-                
+
                 // Default to the My Documents folder.
                 dialog.RootFolder = Environment.SpecialFolder.MyComputer;
-                dialog.SelectedPath = DestinationFolder;
+                dialog.SelectedPath = DestinationFolderPath;
                 var result = dialog.ShowDialog();
                 if (result == System.Windows.Forms.DialogResult.OK)
                 {
                     DestinationPathTextBox.Text = dialog.SelectedPath;
-                    DestinationFolder = dialog.SelectedPath;
+                    DestinationFolderPath = dialog.SelectedPath;
                 }
             }
         }
