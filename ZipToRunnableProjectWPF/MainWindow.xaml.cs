@@ -26,12 +26,11 @@ namespace ZipToRunnableProjectWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public string DestinationFolderPath = UniversalFilePathResolver.ResolvePath(ConfigurationManager.AppSettings["DestinationFolderPath"].ToString());
 
         public string TemplateProjectLocation = UniversalFilePathResolver.ResolvePath(ConfigurationManager.AppSettings["TemplateProjectLocation"].ToString());
 
-        public string DefaultSourcePath = @"D:\Ticket archives\2019.08.27\ProgressAreaCustomProgress\ProgressAreaCustomProgress";
+        public string DefaultSourcePath = @"D:\";
 
         public string OriginalTemplateProjectName = ConfigurationManager.AppSettings["OriginalTemplateProjectName"].ToString();
 
@@ -106,7 +105,7 @@ namespace ZipToRunnableProjectWPF
             }
 
             var filesToExport = ListBoxTest.SelectedItems;
-            var newTarget = PasteTemplate(newProjectName, new DirectoryInfo(DestinationFolderPath));
+            var newTarget = PasteTemplate(newProjectName, new DirectoryInfo(Path.Combine(DestinationFolderPath,newProjectName)));
 
             foreach (TemplateProject file in filesToExport)
             {
