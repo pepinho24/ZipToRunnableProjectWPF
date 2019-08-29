@@ -27,7 +27,7 @@ namespace ZipToRunnableProjectWPF
     public partial class MainWindow : Window
     {
 
-        public string DestinationFolderPath = UniversalFilePathResolver.ResolvePath(ConfigurationManager.AppSettings["DestinationFolderPath"].ToString());//@"D:\Ticket archives\2019.08.27\ProgressAreaCustomProgress\Test";
+        public string DestinationFolderPath = UniversalFilePathResolver.ResolvePath(ConfigurationManager.AppSettings["DestinationFolderPath"].ToString());
 
         public string TemplateProjectLocation = UniversalFilePathResolver.ResolvePath(ConfigurationManager.AppSettings["TemplateProjectLocation"].ToString());
 
@@ -67,13 +67,20 @@ namespace ZipToRunnableProjectWPF
                     selectedfolders.Add(proj);
                 }
             }
+
             foreach (var relativepathtempl in files)
             {
+                if (relativepathtempl.EndsWith(".gitingnore"))
+                {
+                    continue;
+                }
+
                 var proj = new TemplateProject(
                     Path.GetFileName(relativepathtempl),
                     Path.GetFullPath(relativepathtempl),
                     FileOrFolder.File);
                 projects.Add(proj);
+
                 if (StaticVariables.SelectedFiles.Contains(relativepathtempl))
                 {
                     selectedfiles.Add(proj);
@@ -85,8 +92,8 @@ namespace ZipToRunnableProjectWPF
             {
                 ListBoxTest.SelectedItems.Add(selecteditem);
             }
-            ListBoxTest.Focus();
 
+            ListBoxTest.Focus();
         }
 
         private void Export_Click(object sender, RoutedEventArgs e)
